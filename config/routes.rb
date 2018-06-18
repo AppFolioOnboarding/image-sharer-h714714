@@ -4,4 +4,8 @@ Rails.application.routes.draw do
 
   resources :images, only: [:new, :create, :show, :index, :destroy] # rubocop:disable Style/SymbolArray
   resources :feedbacks, only: [:new]
+
+  namespace :api do
+    resource :feedbacks, only: [:create]
+  end
 end
