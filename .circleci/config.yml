@@ -31,7 +31,6 @@ jobs:
             tar -xvzf geckodriver* &&
             chmod +x geckodriver &&
             sudo mv geckodriver /usr/local/bin
-
       - run:
           name: Install the latest firefox
           command: |
@@ -39,7 +38,6 @@ jobs:
             sudo apt-get update &&
             sudo apt-get install -t sid firefox &&
             firefox --version
-
       # Download and cache dependencies
       - restore_cache:
           keys:
@@ -50,7 +48,6 @@ jobs:
           name: install dependencies
           command: |
             bundle install --jobs=4 --retry=3 --path vendor/bundle
-
       - save_cache:
           paths:
             - ./vendor/bundle
@@ -79,9 +76,7 @@ jobs:
           name: run tests
           command: |
             mkdir /tmp/test-results
-
             bundle exec rake test
-
       - run:
           name: run react tests
           command: npm run test
