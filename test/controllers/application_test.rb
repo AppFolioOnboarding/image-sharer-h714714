@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class ApplicationTest < ActionDispatch::IntegrationTest
-  test 'simple test' do
+  def test_simple_test
     get root_path
     assert_response :ok
   end
