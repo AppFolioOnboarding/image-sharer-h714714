@@ -47,3 +47,8 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
+
+# Use simple form
+# See https://github.com/plataformatec/simple_form
+gem 'simple_form'
+gem 'country_select'
