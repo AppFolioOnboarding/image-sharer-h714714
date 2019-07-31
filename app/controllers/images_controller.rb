@@ -14,4 +14,8 @@ class ImagesController < ApplicationController
     end
   end
 
+  def show
+    image = Image.find(params[:id])
+    @url = image.image_url
+  end
 end
