@@ -27,5 +27,4 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
       assert_select '[src=?]', 'https://tineye.com/images/widgets/mona.jpg'
     end
   end
-
 end
