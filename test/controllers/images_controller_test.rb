@@ -19,7 +19,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   def test_show_views
-    image = Image.create!(image_url:'https://tineye.com/images/widgets/mona.jpg')
+    image = Image.create!(image_url: 'https://tineye.com/images/widgets/mona.jpg')
     get image_path(image.id)
     assert_response :ok
 
