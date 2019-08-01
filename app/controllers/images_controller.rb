@@ -17,6 +17,7 @@ class ImagesController < ApplicationController
   def show
     image = Image.find(params[:id])
     @url = image.image_url
+    @tags = image.tag_list
   end
 
   def index

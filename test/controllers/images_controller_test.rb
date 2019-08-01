@@ -63,4 +63,15 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
       assert_equal Image.last(3)[2].tag_list, []
     end
   end
+
+  def test_show_view_tag
+    image = Image.create!('image_url' => 'http://a.com', 'tag_list' => 'a')
+    get image_path(image.id)
+    assert_response :ok
+
+    assert_select 'img' do
+      assert_select '[src=?]', 'http://a.com'
+    end
+    assert_select 'h1', 'a'
+  end
 end
