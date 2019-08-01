@@ -1,0 +1,9 @@
+<h1>Hello World</h1>
+<%= simple_form_for @image do |f| %>
+  <%= f.input :image_url %>
+  <%= f.submit :submit %>
+<% end %>
+
+<% if @image.errors.any? %>
+  <h1>Invalid</h1>
+<% end %>
