@@ -18,4 +18,8 @@ class ImagesController < ApplicationController
     image = Image.find(params[:id])
     @url = image.image_url
   end
+
+  def index
+    @images = Image.all
+  end
 end

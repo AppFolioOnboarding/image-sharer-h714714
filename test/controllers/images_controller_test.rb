@@ -27,4 +27,22 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
       assert_select '[src=?]', 'https://tineye.com/images/widgets/mona.jpg'
     end
   end
+
+  def test_index_action
+    image_urls = %w[http://oi64.tinypic.com/2eamloy.jpg
+                    http://oi67.tinypic.com/2mg9fs8.jpg
+                    https://tineye.com/images/widgets/mona.jpg]
+    Image.create!(image_url: 'https://tineye.com/images/widgets/mona.jpg')
+    Image.create!(image_url: 'http://oi67.tinypic.com/2mg9fs8.jpg')
+    Image.create!(image_url: 'http://oi64.tinypic.com/2eamloy.jpg')
+    get images_path
+    assert_response :ok
+
+    assert_select 'img' do |elements|
+      elements.each_with_index do |element, index|
+        assert_equal element[:src], image_urls[index]
+        assert_equal element[:width], '400'
+      end
+    end
+  end
 end
