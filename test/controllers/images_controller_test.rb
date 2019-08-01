@@ -45,4 +45,11 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
       end
     end
   end
+
+  def test_homepage
+    get root_path
+    assert_response :ok
+
+    assert_select 'a[href=?]', new_image_path
+  end
 end
