@@ -4,7 +4,7 @@ class ImagesController < ApplicationController
   end
 
   def create
-    @image = Image.new(image_url: params[:image][:image_url])
+    @image = Image.new(image_url: params[:image][:image_url], tag_list: params[:image][:tag_list])
 
     if @image.valid?
       @image.save!

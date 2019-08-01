@@ -52,4 +52,15 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_select 'a[href=?]', new_image_path
   end
+
+  def test_create_valid_url_tag
+    assert_difference 'Image.count', 3 do
+      post images_path, params: { 'image' => { 'image_url' => 'http://a.com', 'tag_list' => 'a' } }
+      post images_path, params: { 'image' => { 'image_url' => 'http://efg.com', 'tag_list' => 'e, f, g' } }
+      post images_path, params: { 'image' => { 'image_url' => 'http://empty.com' } }
+      assert_equal Image.last(3)[0].tag_list, %w[a]
+      assert_equal Image.last(3)[1].tag_list, %w[e f g]
+      assert_equal Image.last(3)[2].tag_list, []
+    end
+  end
 end
