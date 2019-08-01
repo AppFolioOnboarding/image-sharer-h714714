@@ -8,7 +8,7 @@ class ImagesController < ApplicationController
 
     if @image.valid?
       @image.save!
-      redirect_to images_path(@image.id)
+      redirect_to image_path(@image.id)
     else
       render 'new'
     end
