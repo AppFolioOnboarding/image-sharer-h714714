@@ -64,17 +64,6 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def test_show_view_tag
-    image = Image.create!('image_url' => 'http://a.com', 'tag_list' => 'a')
-    get image_path(image.id)
-    assert_response :ok
-
-    assert_select 'img' do
-      assert_select '[src=?]', 'http://a.com'
-    end
-    assert_select 'h1', 'a'
-  end
-
   def test_index_with_tag
     image_urls = %w[http://oi64.tinypic.com/2eamloy.jpg
                     http://oi67.tinypic.com/2mg9fs8.jpg
@@ -95,6 +84,18 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     assert_select 'h1' do |elements|
       elements.each_with_index do |_, index|
         assert_select 'h1', image_tags[index]
+      end
+    end
+  end
+
+  def test_show_with_tag
+    image_tags = %w[a b c]
+    image = Image.create!(image_url: 'http://a.com', tag_list: 'a, b, c')
+    get image_path(image.id)
+
+    assert_select 'a' do |elements|
+      elements.each_with_index do |element, index|
+        assert_equal images_path(tag_list: image_tags[index]), element[:href]
       end
     end
   end

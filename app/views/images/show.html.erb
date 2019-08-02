@@ -1,3 +1,5 @@
 <h1>Valid Image</h1>
 <%= image_tag @url %>
-<h1><%= @tags %></h1>
+<% @tags.each do |tag| %>
+  <%= link_to(tag, images_path(tag_list: tag))%>
+<% end %>
