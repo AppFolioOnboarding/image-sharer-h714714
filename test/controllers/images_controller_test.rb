@@ -52,4 +52,50 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
 
     assert_select 'a[href=?]', new_image_path
   end
+
+  def test_create_valid_url_tag
+    assert_difference 'Image.count', 3 do
+      post images_path, params: { 'image' => { 'image_url' => 'http://a.com', 'tag_list' => 'a' } }
+      post images_path, params: { 'image' => { 'image_url' => 'http://efg.com', 'tag_list' => 'e, f, g' } }
+      post images_path, params: { 'image' => { 'image_url' => 'http://empty.com' } }
+      assert_equal Image.last(3)[0].tag_list, %w[a]
+      assert_equal Image.last(3)[1].tag_list, %w[e f g]
+      assert_equal Image.last(3)[2].tag_list, []
+    end
+  end
+
+  def test_show_view_tag
+    image = Image.create!('image_url' => 'http://a.com', 'tag_list' => 'a')
+    get image_path(image.id)
+    assert_response :ok
+
+    assert_select 'img' do
+      assert_select '[src=?]', 'http://a.com'
+    end
+    assert_select 'h1', 'a'
+  end
+
+  def test_index_with_tag
+    image_urls = %w[http://oi64.tinypic.com/2eamloy.jpg
+                    http://oi67.tinypic.com/2mg9fs8.jpg
+                    https://tineye.com/images/widgets/mona.jpg]
+    image_tags = %w[a b c]
+    Image.create!(image_url: 'https://tineye.com/images/widgets/mona.jpg', tag_list: 'c')
+    Image.create!(image_url: 'http://oi67.tinypic.com/2mg9fs8.jpg', tag_list: 'b')
+    Image.create!(image_url: 'http://oi64.tinypic.com/2eamloy.jpg', tag_list: 'a')
+    get images_path
+    assert_response :ok
+
+    assert_select 'img' do |elements|
+      elements.each_with_index do |element, index|
+        assert_equal element[:src], image_urls[index]
+        assert_equal element[:width], '400'
+      end
+    end
+    assert_select 'h1' do |elements|
+      elements.each_with_index do |_, index|
+        assert_select 'h1', image_tags[index]
+      end
+    end
+  end
 end

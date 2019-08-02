@@ -4,11 +4,11 @@ class ImagesController < ApplicationController
   end
 
   def create
-    @image = Image.new(image_url: params[:image][:image_url])
+    @image = Image.new(image_url: params[:image][:image_url], tag_list: params[:image][:tag_list])
 
     if @image.valid?
       @image.save!
-      redirect_to images_path(@image.id)
+      redirect_to image_path(@image.id)
     else
       render 'new'
     end
@@ -17,6 +17,7 @@ class ImagesController < ApplicationController
   def show
     image = Image.find(params[:id])
     @url = image.image_url
+    @tags = image.tag_list
   end
 
   def index

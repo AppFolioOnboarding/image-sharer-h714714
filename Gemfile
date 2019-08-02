@@ -52,3 +52,5 @@ gem 'tzinfo-data', platforms: %i[mingw mswin x64_mingw jruby]
 # See https://github.com/plataformatec/simple_form
 gem 'country_select'
 gem 'simple_form'
+
+gem 'acts-as-taggable-on', '~> 6.0'
