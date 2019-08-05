@@ -2,6 +2,8 @@
 <div>
 <% @images.reverse_each do |image| %>
   <%= image_tag(image.image_url, :width => "400") %>
-    <h1><%= image.tag_list %></h1>
+    <% image.tag_list.each do |tag| %>
+      <%= link_to(tag, images_path(tag_list: tag))%>
+    <% end %>
 <% end %>
 </div>

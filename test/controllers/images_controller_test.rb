@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ImagesControllerTest < ActionDispatch::IntegrationTest
+class ImagesControllerTest < ActionDispatch::IntegrationTest # rubocop:disable Metrics/ClassLength
   def test_simple_test
     get root_path
     assert_response :ok
@@ -81,9 +81,9 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
         assert_equal element[:width], '400'
       end
     end
-    assert_select 'h1' do |elements|
-      elements.each_with_index do |_, index|
-        assert_select 'h1', image_tags[index]
+    assert_select 'div > a' do |elements|
+      elements.each_with_index do |element, index|
+        assert_equal images_path(tag_list: image_tags[index]), element[:href]
       end
     end
   end
