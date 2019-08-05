@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class ImagesControllerTest < ActionDispatch::IntegrationTest
+class ImagesControllerTest < ActionDispatch::IntegrationTest # rubocop:disable Metrics/ClassLength
   def test_simple_test
     get root_path
     assert_response :ok
@@ -64,17 +64,6 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
-  def test_show_view_tag
-    image = Image.create!('image_url' => 'http://a.com', 'tag_list' => 'a')
-    get image_path(image.id)
-    assert_response :ok
-
-    assert_select 'img' do
-      assert_select '[src=?]', 'http://a.com'
-    end
-    assert_select 'h1', 'a'
-  end
-
   def test_index_with_tag
     image_urls = %w[http://oi64.tinypic.com/2eamloy.jpg
                     http://oi67.tinypic.com/2mg9fs8.jpg
@@ -92,9 +81,41 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest
         assert_equal element[:width], '400'
       end
     end
-    assert_select 'h1' do |elements|
-      elements.each_with_index do |_, index|
-        assert_select 'h1', image_tags[index]
+    assert_select 'div > a' do |elements|
+      elements.each_with_index do |element, index|
+        assert_equal images_path(tag_list: image_tags[index]), element[:href]
+      end
+    end
+  end
+
+  def test_show_with_tag
+    image_tags = %w[a b c]
+    image = Image.create!(image_url: 'http://a.com', tag_list: 'a, b, c')
+    get image_path(image.id)
+
+    assert_select 'a' do |elements|
+      elements.each_with_index do |element, index|
+        assert_equal images_path(tag_list: image_tags[index]), element[:href]
+      end
+    end
+  end
+
+  def test_index_tag_filter
+    image_urls = %w[http://a.com http://b.com https://c.com]
+    Image.create!(image_url: image_urls[0], tag_list: 'a, b')
+    Image.create!(image_url: image_urls[1], tag_list: 'a, c')
+    Image.create!(image_url: image_urls[2], tag_list: 'b, c')
+    get images_path(tag_list: 'a')
+
+    expected_links = [images_path(tag_list: 'a'),
+                      images_path(tag_list: 'c'),
+                      images_path(tag_list: 'a'),
+                      images_path(tag_list: 'b')]
+    assert_response :ok
+    assert_select 'div > a', 4
+    assert_select 'div > a' do |elements|
+      elements.each_with_index do |ele, index|
+        assert_equal expected_links[index], ele[:href]
       end
     end
   end
