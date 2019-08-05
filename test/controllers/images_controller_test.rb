@@ -119,4 +119,20 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest # rubocop:disable M
       end
     end
   end
+
+  def test_destroy__image_not_exist
+    invalid_id = -1
+    assert_no_difference 'Image.count' do
+      delete image_path(invalid_id)
+      assert_redirected_to images_path
+    end
+  end
+
+  def test_destroy
+    img = Image.create!(image_url: 'http://a.com', tag_list: 'a, c')
+    assert_difference 'Image.count', -1 do
+      delete image_path(img.id)
+      assert_redirected_to images_path
+    end
+  end
 end

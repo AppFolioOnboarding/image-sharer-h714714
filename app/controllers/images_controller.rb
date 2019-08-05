@@ -27,4 +27,9 @@ class ImagesController < ApplicationController
                 Image.all
               end
   end
+
+  def destroy
+    Image.find(params[:id]).update(hidden: true) if Image.exists?(params[:id])
+    redirect_to images_path
+  end
 end
