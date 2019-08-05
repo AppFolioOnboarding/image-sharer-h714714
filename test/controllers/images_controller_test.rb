@@ -99,4 +99,24 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest # rubocop:disable M
       end
     end
   end
+
+  def test_index_tag_filter
+    image_urls = %w[http://a.com http://b.com https://c.com]
+    Image.create!(image_url: image_urls[0], tag_list: 'a, b')
+    Image.create!(image_url: image_urls[1], tag_list: 'a, c')
+    Image.create!(image_url: image_urls[2], tag_list: 'b, c')
+    get images_path(tag_list: 'a')
+
+    expected_links = [images_path(tag_list: 'a'),
+                      images_path(tag_list: 'c'),
+                      images_path(tag_list: 'a'),
+                      images_path(tag_list: 'b')]
+    assert_response :ok
+    assert_select 'div > a', 4
+    assert_select 'div > a' do |elements|
+      elements.each_with_index do |ele, index|
+        assert_equal expected_links[index], ele[:href]
+      end
+    end
+  end
 end
