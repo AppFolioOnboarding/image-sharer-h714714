@@ -15,4 +15,10 @@ class ImageTest < ActiveSupport::TestCase
     valid_url = Image.new(image_url: 'http://example.com')
     assert valid_url.valid?
   end
+
+  def test_default_scope
+    Image.create!(image_url: 'http://hidden.com', hidden: true)
+    non_hidden = Image.create!(image_url: 'http://nonhidden.com', hidden: false)
+    assert_equal [non_hidden], Image.all
+  end
 end
