@@ -26,6 +26,10 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest # rubocop:disable M
     assert_select 'img' do
       assert_select '[src=?]', 'https://tineye.com/images/widgets/mona.jpg'
     end
+
+    assert_select '.js-del' do
+      assert_select '[data-method=?]', 'delete'
+    end
   end
 
   def test_index_action
@@ -81,9 +85,14 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest # rubocop:disable M
         assert_equal element[:width], '400'
       end
     end
-    assert_select 'div > a' do |elements|
+    assert_select '.js-tag' do |elements|
       elements.each_with_index do |element, index|
         assert_equal images_path(tag_list: image_tags[index]), element[:href]
+      end
+    end
+    assert_select '.js-del' do |elements|
+      elements.each do
+        assert_select '[data-method=?]', 'delete'
       end
     end
   end
@@ -93,7 +102,7 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest # rubocop:disable M
     image = Image.create!(image_url: 'http://a.com', tag_list: 'a, b, c')
     get image_path(image.id)
 
-    assert_select 'a' do |elements|
+    assert_select '.js-tag' do |elements|
       elements.each_with_index do |element, index|
         assert_equal images_path(tag_list: image_tags[index]), element[:href]
       end
@@ -112,11 +121,27 @@ class ImagesControllerTest < ActionDispatch::IntegrationTest # rubocop:disable M
                       images_path(tag_list: 'a'),
                       images_path(tag_list: 'b')]
     assert_response :ok
-    assert_select 'div > a', 4
-    assert_select 'div > a' do |elements|
+    assert_select '.js-tag', 4
+    assert_select '.js-tag' do |elements|
       elements.each_with_index do |ele, index|
         assert_equal expected_links[index], ele[:href]
       end
+    end
+  end
+
+  def test_destroy__image_not_exist
+    invalid_id = -1
+    assert_no_difference 'Image.count' do
+      delete image_path(invalid_id)
+      assert_redirected_to images_path
+    end
+  end
+
+  def test_destroy
+    img = Image.create!(image_url: 'http://a.com', tag_list: 'a, c')
+    assert_difference 'Image.count', -1 do
+      delete image_path(img.id)
+      assert_redirected_to images_path
     end
   end
 end

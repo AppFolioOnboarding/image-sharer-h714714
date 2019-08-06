@@ -3,7 +3,9 @@
 <% @images.reverse_each do |image| %>
   <%= image_tag(image.image_url, :width => "400") %>
     <% image.tag_list.each do |tag| %>
-      <%= link_to(tag, images_path(tag_list: tag))%>
+      <%= link_to(tag, images_path(tag_list: tag), class: "js-tag")%>
     <% end %>
+    <%= link_to "Delete Image", image_path(image.id), class: "js-del", method: :delete, data: {confirm: 'Are you sure?'}%>
+    <br>
 <% end %>
 </div>

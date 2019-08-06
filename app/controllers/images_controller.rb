@@ -15,9 +15,7 @@ class ImagesController < ApplicationController
   end
 
   def show
-    image = Image.find(params[:id])
-    @url = image.image_url
-    @tags = image.tag_list
+    @image = Image.find(params[:id])
   end
 
   def index
@@ -26,5 +24,10 @@ class ImagesController < ApplicationController
               else
                 Image.all
               end
+  end
+
+  def destroy
+    Image.find(params[:id]).update(hidden: true) if Image.exists?(params[:id])
+    redirect_to images_path
   end
 end
