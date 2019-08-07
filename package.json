@@ -4,6 +4,8 @@
     "autobind-decorator": "^2.1.0",
     "babel-preset-react-native-stage-0": "^1.0.1",
     "coffeescript": "1.12.7",
+    "mobx": "^5.13.0",
+    "mobx-react": "^6.1.1",
     "prop-types": "^15.6.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
