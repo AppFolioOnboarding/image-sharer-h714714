@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class FeedbacksControllerTest < ActionDispatch::IntegrationTest # rubocop:disable Metrics/ClassLength
+class FeedbacksControllerTest < ActionDispatch::IntegrationTest
   def test_simple_test
     get new_feedback_path
     assert_response :ok
